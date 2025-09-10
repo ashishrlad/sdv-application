@@ -31,4 +31,4 @@ echo "Flushing iptables..."
 sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
 
 echo "Cleanup complete."
-echo "Note: /mnt/mysql-db-data/ and /mnt/minio-storage/ have not been removed."
+echo "Note: /data/mysql-db-data/ and /data/minio-storage/ have not been removed."

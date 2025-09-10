@@ -38,6 +38,8 @@ sudo systemctl start node_exporter
 sudo systemctl enable node_exporter
 
 # 2. Get node name
+sudo mkdir -p /data/grafana-data
+sudo mkdir -p /data/prometheus-data
 NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
 
 # 3. Substitute node name in PV and ConfigMap manifests

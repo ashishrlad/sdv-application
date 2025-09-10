@@ -6,8 +6,8 @@ set -e
 echo "--- Deploying MySQL ---"
 
 # 1. Create storage directory
-echo "Creating /mnt/mysql-db-data/ directory..."
-sudo mkdir -p /mnt/mysql-db-data
+echo "Creating /data/mysql-db-data/ directory..."
+sudo mkdir -p /data/mysql-db-data
 
 # 2. Get node name
 NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')

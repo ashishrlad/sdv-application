@@ -6,8 +6,8 @@ set -e
 echo "--- Deploying MinIO ---"
 
 # 1. Create storage directory
-echo "Creating /mnt/minio-storage/ directory..."
-sudo mkdir -p /mnt/minio-storage
+echo "Creating /data/minio-storage/ directory..."
+sudo mkdir -p /data/minio-storage
 
 # 2. Get node name
 NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')

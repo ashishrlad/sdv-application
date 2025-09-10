@@ -46,9 +46,6 @@ kubectl apply -f kubernetes/minio/pvc.yaml
 kubectl apply -f kubernetes/minio/deployment.yaml
 kubectl apply -f kubernetes/minio/service.yaml
 
-# Replace localhost with KUBE_API_IP in MinIO deployment
-sed -i "s|http://localhost:30090|http://$KUBE_API_IP:30090|g" kubernetes/minio/deployment.yaml
-
 # 5. Clean up temporary file
 rm kubernetes/cluster-level/pv/minio-pv.yaml.tmp
 

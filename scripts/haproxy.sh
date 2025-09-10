@@ -70,7 +70,6 @@ backend http_back
    server web_app 127.0.0.1:30080 check
 
 backend minio_back
-   reqstrip ^/minio
    server minio_server 127.0.0.1:30090 check
 
 backend grafana_back

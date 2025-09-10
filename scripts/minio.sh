@@ -3,6 +3,27 @@
 # Exit on any error
 set -e
 
+# Function to display usage
+usage() {
+    echo "Usage: $0 --ip <kube-api-ip>"
+    exit 1
+}
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --ip) KUBE_API_IP="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; usage ;;
+    esac
+    shift
+done
+
+# Check if parameters are set
+if [ -z "$KUBE_API_IP" ]; then
+    echo "Error: Missing required arguments."
+    usage
+fi
+
 echo "--- Deploying MinIO ---"
 
 # 1. Create storage directory
@@ -23,6 +44,9 @@ kubectl apply -f kubernetes/cluster-level/pv/minio-pv.yaml.tmp
 kubectl apply -f kubernetes/minio/pvc.yaml
 kubectl apply -f kubernetes/minio/deployment.yaml
 kubectl apply -f kubernetes/minio/service.yaml
+
+# Replace localhost with KUBE_API_IP in MinIO deployment
+sed -i "s|http://localhost:30090/minio|http://$KUBE_API_IP:30090/minio|g" kubernetes/minio/deployment.yaml
 
 # 5. Clean up temporary file
 rm kubernetes/cluster-level/pv/minio-pv.yaml.tmp

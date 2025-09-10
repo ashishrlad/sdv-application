@@ -20,6 +20,9 @@ spec:
       containers:
       - name: minio
         image: minio/minio:latest
+        env:
+        - name: MINIO_SERVER_URL
+          value: http://localhost:30090/minio
         args:
         - server
         - /data

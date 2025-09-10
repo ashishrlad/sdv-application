@@ -42,7 +42,7 @@ echo "Phase 1: Core Framework and Environment Setup"
 echo "Phase 2: Kubernetes Cluster and Basic Services"
 ./scripts/k8s-cluster.sh --ip $KUBE_API_IP --k8s-version $K8S_VERSION
 ./scripts/local-storage.sh
-./scripts/minio.sh
+./scripts/minio.sh --ip $KUBE_API_IP
 ./scripts/mysql.sh
 ./scripts/redis.sh
 

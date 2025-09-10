@@ -11,6 +11,9 @@ echo "Stopping and disabling kubelet..."
 
 
 echo "Resetting kubeadm..."
+# Kill process using port 6443
+echo "Killing process using port 6443..."
+sudo fuser -k 6443/tcp || echo "No process found using port 6443."
 (sudo kubeadm reset -f) || echo "kubeadm not found, skipping..."
 
 # Unhold and remove kubernetes packages

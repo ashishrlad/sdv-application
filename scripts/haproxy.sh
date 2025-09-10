@@ -6,7 +6,7 @@ set -e
 echo "--- Installing and Configuring HAProxy ---"
 
 # 1. Install HAProxy
-if ! command -v haproxy &> /dev/null;
+if ! command -v haproxy &> /dev/null; then
     sudo apt-get update
     sudo apt-get install -y haproxy
 else

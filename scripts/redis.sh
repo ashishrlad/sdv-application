@@ -7,9 +7,9 @@ echo "--- Deploying Redis ---"
 
 # 1. Apply manifests
 echo "Applying Redis manifests..."
-kubectl apply -f kubernetes/sdv/namespace.yaml
-kubectl apply -f kubernetes/sdv/redis-deployment.yaml
-kubectl apply -f kubernetes/sdv/redis-service.yaml
+kubectl apply -f ../kubernetes/sdv/namespace.yaml
+kubectl apply -f ../kubernetes/sdv/redis-deployment.yaml
+kubectl apply -f ../kubernetes/sdv/redis-service.yaml
 
 # 2. Verify deployment
 echo "Verifying Redis deployment..."

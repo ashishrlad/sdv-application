@@ -7,11 +7,11 @@ echo "--- Deploying SDV Applications ---"
 
 # 1. Apply manifests
 echo "Applying SDV Application manifests..."
-kubectl apply -f kubernetes/sdv/namespace.yaml
-kubectl apply -f kubernetes/sdv/sdv-middleware-deployment.yaml
-kubectl apply -f kubernetes/sdv/sdv-middleware-service.yaml
-kubectl apply -f kubernetes/sdv/sdv-web-deployment.yaml
-kubectl apply -f kubernetes/sdv/sdv-web-service.yaml
+kubectl apply -f ../kubernetes/sdv/namespace.yaml
+kubectl apply -f ../kubernetes/sdv/sdv-middleware-deployment.yaml
+kubectl apply -f ../kubernetes/sdv/sdv-middleware-service.yaml
+kubectl apply -f ../kubernetes/sdv/sdv-web-deployment.yaml
+kubectl apply -f ../kubernetes/sdv/sdv-web-service.yaml
 
 # 2. Verify deployments
 echo "Verifying SDV Application deployments..."

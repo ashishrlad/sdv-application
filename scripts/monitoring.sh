@@ -41,27 +41,27 @@ sudo systemctl enable node_exporter
 NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
 
 # 3. Substitute node name in PV and ConfigMap manifests
-sed "s/<NODE_NAME>/$NODE_NAME/g" ../kubernetes/cluster-level/pv/prometheus-pv.yaml > ../kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
-sed "s/<NODE_NAME>/$NODE_NAME/g" ../kubernetes/cluster-level/pv/grafana-pv.yaml > ../kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
-sed "s/<NODE_NAME>/$NODE_NAME/g" ../kubernetes/monitoring/prometheus-configmap.yaml > ../kubernetes/monitoring/prometheus-configmap.yaml.tmp
+sed "s/<NODE_NAME>/$NODE_NAME/g" kubernetes/cluster-level/pv/prometheus-pv.yaml > kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
+sed "s/<NODE_NAME>/$NODE_NAME/g" kubernetes/cluster-level/pv/grafana-pv.yaml > kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
+sed "s/<NODE_NAME>/$NODE_NAME/g" kubernetes/monitoring/prometheus-configmap.yaml > kubernetes/monitoring/prometheus-configmap.yaml.tmp
 
 # 4. Apply manifests
 echo "Applying Monitoring manifests..."
-kubectl apply -f ../kubernetes/monitoring/namespace.yaml
-kubectl apply -f ../kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
-kubectl apply -f ../kubernetes/monitoring/prometheus-pvc.yaml
-kubectl apply -f ../kubernetes/monitoring/prometheus-configmap.yaml.tmp
-kubectl apply -f ../kubernetes/monitoring/prometheus-deployment.yaml
-kubectl apply -f ../kubernetes/monitoring/prometheus-service.yaml
-kubectl apply -f ../kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
-kubectl apply -f ../kubernetes/monitoring/grafana-pvc.yaml
-kubectl apply -f ../kubernetes/monitoring/grafana-deployment.yaml
-kubectl apply -f ../kubernetes/monitoring/grafana-service.yaml
+kubectl apply -f kubernetes/monitoring/namespace.yaml
+kubectl apply -f kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
+kubectl apply -f kubernetes/monitoring/prometheus-pvc.yaml
+kubectl apply -f kubernetes/monitoring/prometheus-configmap.yaml.tmp
+kubectl apply -f kubernetes/monitoring/prometheus-deployment.yaml
+kubectl apply -f kubernetes/monitoring/prometheus-service.yaml
+kubectl apply -f kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
+kubectl apply -f kubernetes/monitoring/grafana-pvc.yaml
+kubectl apply -f kubernetes/monitoring/grafana-deployment.yaml
+kubectl apply -f kubernetes/monitoring/grafana-service.yaml
 
 # 5. Clean up temporary files
-rm ../kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
-rm ../kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
-rm ../kubernetes/monitoring/prometheus-configmap.yaml.tmp
+rm kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp
+rm kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
+rm kubernetes/monitoring/prometheus-configmap.yaml.tmp
 
 # 6. Verify deployments
 echo "Verifying Monitoring deployments..."

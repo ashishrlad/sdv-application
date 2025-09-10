@@ -22,7 +22,7 @@ spec:
         image: minio/minio:latest
         env:
         - name: MINIO_SERVER_URL
-          value: http://localhost:30090/minio
+          value: http://localhost:30090
         args:
         - server
         - /data

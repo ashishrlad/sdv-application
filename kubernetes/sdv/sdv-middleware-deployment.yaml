@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sdv-middleware
+  namespace: sdv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sdv-middleware
+  template:
+    metadata:
+      labels:
+        app: sdv-middleware
+    spec:
+      containers:
+      - name: sdv-middleware
+        image: nginx:latest
+        ports:
+        - containerPort: 80

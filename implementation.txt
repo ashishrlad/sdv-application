@@ -1,0 +1,73 @@
+# Implementation Plan
+
+This document outlines the phased implementation plan for the automation scripts.
+
+## Phase 1: Core Framework and Environment Setup
+
+-   **Task 1: Create `install.sh` main script.**
+    -   Implement argument parsing for IP and Kubernetes version.
+    -   Implement logging to a file.
+    -   Structure the script to call other scripts for different stages.
+-   **Task 2: Create `cleanup.sh` script.**
+    -   Implement functions to remove packages, directories, and flush iptables.
+-   **Task 3: Implement Kubernetes Prerequisites script.**
+    -   Disable swap.
+    -   Install `containerd` and `docker`.
+    -   Configure both runtimes to use `systemd` cgroup driver.
+    -   Load kernel modules (`overlay`, `br_netfilter`).
+    -   Set required `sysctl` parameters.
+    -   Install `kubeadm`, `kubelet`, and `kubectl`.
+-   **Task 4: Implement HAProxy installation script.**
+    -   Install `haproxy`.
+    -   Configure `haproxy.cfg` with logging and a sample frontend/backend.
+    -   Enable and start the `haproxy` service.
+
+## Phase 2: Kubernetes Cluster and Basic Services
+
+-   **Task 1: Implement Kubernetes cluster setup script.**
+    -   Run `kubeadm init`.
+    -   Configure `kubeconfig` for user and root.
+    -   Install Calico CNI.
+    -   Remove the control-plane taint.
+-   **Task 2: Implement Local Storage script.**
+    -   Create a script to deploy a `StorageClass` for local persistent volumes.
+-   **Task 3: Implement MinIO deployment script.**
+    -   Create the `/mnt/minio-storage/` directory.
+    -   Create the `minio` namespace.
+    -   Create Kubernetes manifests (PV, PVC, Deployment, Service) for MinIO.
+    -   Write a script to apply the manifests and verify the deployment.
+-   **Task 4: Implement MySQL deployment script.**
+    -   Create the `/mnt/mysql-db-data/` directory.
+    -   Create the `sdv` namespace.
+    -   Create Kubernetes manifests (PV, PVC, Deployment, Service) for MySQL.
+    -   Write a script to apply the manifests.
+    -   Implement a post-deployment script/job to create the database and user.
+    -   Verify the deployment.
+-   **Task 5: Implement Redis deployment script.**
+    -   Create Kubernetes manifests (Deployment, Service) for Redis in the `sdv` namespace.
+    -   Write a script to apply the manifests and verify the deployment.
+
+## Phase 3: Application Deployment and Monitoring
+
+-   **Task 1: Implement SDV Application deployment scripts.**
+    -   Create manifests for `sdv-middleware` (Deployment, Service).
+    -   Create manifests for `sdv-web` (Deployment, NodePort Service).
+    -   Write scripts to deploy and verify these applications.
+-   **Task 2: Implement Monitoring Stack deployment script.**
+    -   Create the `monitoring` namespace.
+    -   Install Prometheus Node Exporter on the host VM.
+    -   Create manifests for Prometheus (PV, PVC, ConfigMap, Deployment, Service).
+    -   Create manifests for Grafana (PV, PVC, Deployment, Service).
+    -   Write a script to deploy the monitoring stack and verify all components.
+-   **Task 3: Final verification and success message.**
+    -   Implement a final check in `install.sh` that verifies all deployments.
+    -   Display a summary of all deployed components and their status.
+
+## Phase 4: Documentation and Refinement
+
+-   **Task 1: Create `README.md` file.**
+    -   Add prerequisites, installation steps, and cleanup instructions.
+-   **Task 2: Review and Refine all scripts.**
+    -   Ensure idempotency where possible.
+    -   Improve error handling and logging.
+    -   Add comments to the scripts for clarity.

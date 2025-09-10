@@ -1,0 +1,78 @@
+I. Core Automation Framework:
+   1. Single Command/Minimal Steps: Create an automation solution for installation and configuration using bash or shell scripting for creating, installing, configuring all tools and for cleanup also. single install.sh script
+        will be there for initialining the setup, other respective scripts can be there in other respective directories and can be called from install.sh while running install.sh it should do Ansible installation and also 
+		check if ansible is already installed or not and act according. Also it should ask for IP for the Kubernets API endpoint and kubernetes version based on which kubernetes installation will be done.
+   2. Cleanup Scripts: Provide scripts for cleanup if installation fails or for general teardown.
+   3. Target Operating System: Ubuntu 22.04 LTS.
+   4. Logging: Store all execution logs into a single file.
+   5. Documentation: Create a README.md file detailing prerequisites and execution steps.
+   6. Kube-apiserver Endpoint Input: Prompt for the private IP address of the Kube-apiserver endpoint during installation.
+   7. Final Success Message: Display a summary of successfully deployed components upon completion.
+
+  II. Kubernetes Cluster Setup:
+   1. Kubeadm Prerequisites:
+       * Setup kubeadm prerequisites.
+       * Install HAproxy as a systemctl service and enable the service, then in haproxy config all types of logs must be enabled and then sample frontend and backend must be added which allows 80 and 443 ports in 
+	      frontend and routes traffic to backend port 30080 on  same node on which web app is running
+       * Consider containerd as the container runtime and also I want to setup docker runtime both on this single node, i want to run docker for other apps and containerd for kubernetes, make sure that docker and container
+    	   both will be running and using "systemd" as a cgroup driver for both
+       * Include specific commands: sudo swapoff -a, sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab, sudo tee
+         /etc/modules-load.d/containerd.conf, sudo modprobe overlay, sudo modprobe br_netfilter, sudo tee /etc/sysctl.d/kubernetes.conf, sudo
+         sysctl --system.
+   2. Single Node Cluster: Setup a kubeadm single-node cluster.
+   3. Kubernetes Version: Install Kubernetes version 1.31 for kubelet, kubeadm, and kubectl.
+   4. CNI Plugin: Use Calico CNI instead of Flannel.
+   5. Node Taint Removal: Ensure the node-role.kubernetes.io/control-plane:NoSchedule taint is removed from the control plane node so
+      applications can be deployed on it. The taint removal step should be idempotent (skipped if already removed).
+   6. Kubeconfig Configuration: Configure kubeconfig for the current user as well as root user.
+   7. Following must be the sequence for deployment
+    7.1 Install ansible
+    7.2 Install kubernetes pre-requisites
+    7.3 Install HA proxy and configure as mentioned above
+    7.4 Configure local storageclass and then create "minio" namespace and create minio deployment in it and run as a nodeport service with 30090 for console and 30009 for api
+    7.5 Configure MySQL deployment in "sdv" namespace with service clusterIP
+    7.6 Configure Redis deployment in "sdv" namespace with service clusterIP
+    7.7 Configure sdv-middleware deployment in "sdv" namespace with service clusterIP
+    7.8 Configure sdv-web deployment in "sdv" namespace with service nodePort
+    7.9 Then deploy monitoing stack as mentioned below in the "monitoring" namespace
+
+
+  III. Application Deployments & Verification:
+   1. Monitoring Stack:
+       * Install Prometheus Node Exporter on the VM.
+       * Deploy Prometheus and Grafana on k8s in the monitoring namespace.
+       * Verify Node Exporter setup.
+       * Verify monitoring stack deployment.
+       * PV, PVC must be created using the local storage class
+   2. Redis Service:
+       * Create an sdv namespace.
+       * Deploy a single-pod Redis service with its Kubernetes service in the sdv namespace.
+       * Verify Redis setup.
+   3. MySQL Service:
+       * Create /mnt/mysql-db-data/ directory on the VM.
+       * Create a local storage class named sdv-local-storage.
+       * Deploy MySQL on k8s using PV and PVC with the sdv-local-storage class.
+       * Verify MySQL setup, create sdv_data database, create user sdvuser with password abcd1234, grant all privileges, and flush privileges.
+       * Specific handling for PV/PVC: Ensure nodeAffinity is correctly templated and handled for local PVs, with graceful failure and user
+         instructions if an immutable PV is encountered.
+   4. SDV Application:
+       * Deploy an sdv application using nginx:latest image and its Kubernetes service in the sdv namespace.
+       * Verify sdv app deployment.
+   5. SDV Nginx/Frontend Application:
+       * Deploy an Nginx/frontend app using nginx:latest image with a NodePort service in the sdv namespace.
+       * Verify SDV Nginx/frontend app deployment.
+   6. MinIO Service:
+       * Create /mnt/minio-storage/ directory.
+       * Create a minio namespace.
+       * Deploy MinIO on k8s with a local volume and its Kubernetes service.
+       * Specific handling for PV/PVC: Ensure nodeAffinity is correctly templated and handled for local PVs, with graceful failure and user
+         instructions if an immutable PV is encountered.
+   7. General Verification: All pod status checks should be robust, including checking status.containerStatuses[0].ready.
+
+  IV. Cleanup Script Enhancements:
+   1. Kubernetes Package Removal: Unhold and remove kubeadm, kubectl, kubelet packages, allowing changes to held packages.
+   2. Directory Removal: Remove /etc/kubernetes, $HOME/.kube, /var/lib/etcd, /etc/containerd, and /etc/cni directories.
+   3. Persistent Data Exclusion: Do NOT remove /mnt/mysql-db-data/ and /mnt/minio-storage/ directories.
+   4. Iptables Flush: Flush iptables rules (iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X).
+
+  This comprehensive set of requirements has guided the development of bash or shell sciripts and helper scripts.

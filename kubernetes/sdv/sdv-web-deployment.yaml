@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sdv-web
+  namespace: sdv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sdv-web
+  template:
+    metadata:
+      labels:
+        app: sdv-web
+    spec:
+      containers:
+      - name: sdv-web
+        image: nginx:latest
+        ports:
+        - containerPort: 80

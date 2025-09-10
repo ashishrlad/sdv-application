@@ -70,15 +70,12 @@ backend http_back
    server web_app 127.0.0.1:30080 check
 
 backend minio_back
-   reqstrip ^/minio
    server minio_server 127.0.0.1:30090 check
 
 backend grafana_back
-   reqstrip ^/grafana
    server grafana_server 127.0.0.1:30092 check
 
 backend prometheus_back
-   reqstrip ^/prometheus
    server prometheus_server 127.0.0.1:30091 check
 EOF
 

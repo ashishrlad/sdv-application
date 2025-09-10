@@ -3,6 +3,27 @@
 # Exit on any error
 set -e
 
+# Function to display usage
+usage() {
+    echo "Usage: $0 --ip <kube-api-ip>"
+    exit 1
+}
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --ip) KUBE_API_IP="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; usage ;;
+    esac
+    shift
+done
+
+# Check if parameters are set
+if [ -z "$KUBE_API_IP" ]; then
+    echo "Error: Missing required arguments."
+    usage
+fi
+
 echo "--- Deploying Monitoring Stack ---"
 
 # 1. Install Prometheus Node Exporter on the VM
@@ -59,6 +80,10 @@ kubectl apply -f kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
 kubectl apply -f kubernetes/monitoring/grafana-pvc.yaml
 kubectl apply -f kubernetes/monitoring/grafana-deployment.yaml
 kubectl apply -f kubernetes/monitoring/grafana-service.yaml
+
+# Replace localhost with KUBE_API_IP in Grafana and Prometheus deployments
+sed -i "s|http://localhost:3000/grafana|http://$KUBE_API_IP:30092/grafana|g" kubernetes/monitoring/grafana-deployment.yaml
+sed -i "s|http://localhost:9090/prometheus|http://$KUBE_API_IP:30091/prometheus|g" kubernetes/monitoring/prometheus-deployment.yaml
 
 # 5. Clean up temporary files
 rm kubernetes/cluster-level/pv/prometheus-pv.yaml.tmp

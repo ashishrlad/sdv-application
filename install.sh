@@ -48,7 +48,7 @@ echo "Phase 2: Kubernetes Cluster and Basic Services"
 
 echo "Phase 3: Application Deployment and Monitoring"
 ./scripts/sdv-apps.sh
-./scripts/monitoring.sh
+./scripts/monitoring.sh --ip $KUBE_API_IP
 
 final_summary() {
     echo "--- Installation Summary ---"

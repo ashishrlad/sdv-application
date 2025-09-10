@@ -56,10 +56,30 @@ frontend http_front
    bind *:80
    bind *:443 ssl crt /etc/haproxy/certs/haproxy.pem
    stats uri /haproxy?stats
+
+   acl path_minio path_beg /minio
+   acl path_grafana path_beg /grafana
+   acl path_prometheus path_beg /prometheus
+
+   use_backend minio_back if path_minio
+   use_backend grafana_back if path_grafana
+   use_backend prometheus_back if path_prometheus
    default_backend http_back
 
 backend http_back
    server web_app 127.0.0.1:30080 check
+
+backend minio_back
+   reqstrip ^/minio
+   server minio_server 127.0.0.1:30090 check
+
+backend grafana_back
+   reqstrip ^/grafana
+   server grafana_server 127.0.0.1:30092 check
+
+backend prometheus_back
+   reqstrip ^/prometheus
+   server prometheus_server 127.0.0.1:30091 check
 EOF
 
 # 4. Enable and start HAProxy

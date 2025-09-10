@@ -13,6 +13,7 @@ I. Core Automation Framework:
        * Setup kubeadm prerequisites.
        * Install HAproxy as a systemctl service and enable the service, then in haproxy config all types of logs must be enabled and then sample frontend and backend must be added which allows 80 and 443 ports in 
 	      frontend and routes traffic to backend port 30080 on  same node on which web app is running
+       * Also expose MinIO, Grafana and Prometheus services through HAProxy. MinIO should be accessible at `/minio`, Grafana at `/grafana` and Prometheus at `/prometheus`.
        * Consider containerd as the container runtime and also I want to setup docker runtime both on this single node, i want to run docker for other apps and containerd for kubernetes, make sure that docker and container
     	   both will be running and using "systemd" as a cgroup driver for both
        * Include specific commands: sudo swapoff -a, sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab, sudo tee

@@ -107,13 +107,7 @@ if ! command -v kubelet &> /dev/null || ! kubelet --version | grep -q "$K8S_VERS
     curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/Release.key" | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
     echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update
-
-    if ! apt-cache madison kubeadm | grep -q "$K8S_VERSION"; then
-        echo "Error: Kubernetes version $K8S_VERSION not found in the repository."
-        exit 1
-    fi
-
-    sudo apt-get install -y kubelet=$K8S_VERSION-00 kubeadm=$K8S_VERSION-00 kubectl=$K8S_VERSION-00
+    sudo apt-get install -y kubelet kubeadm kubectl
     sudo apt-mark hold kubelet kubeadm kubectl
 else
     echo "Kubernetes components version $K8S_VERSION are already installed."

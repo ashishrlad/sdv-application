@@ -74,7 +74,7 @@ backend http_back
 
 backend minio_back
    #server minio_server 127.0.0.1:9001 check
-   server minio_server 127.0.0.1:9000 check
+   server minio_server 127.0.0.1:9001 check
 
 backend grafana_back
    server grafana_server 127.0.0.1:30092 check

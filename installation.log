@@ -1,0 +1,5 @@
+Starting installation with Kube API IP: 192.168.0.94 and Kubernetes Version: 1.30.0
+Phase 1: Core Framework and Environment Setup
+--- Running Kubernetes Prerequisites ---
+Disabling swap...
+sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper

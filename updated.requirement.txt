@@ -39,10 +39,13 @@ I. Core Automation Framework:
   III. Application Deployments & Verification:
    1. Monitoring Stack:
        * Install Prometheus Node Exporter on the VM.
+       * Deploy Node Exporter as a DaemonSet in the 'monitoring' namespace.
+       * Configure Prometheus to scrape metrics from the Node Exporter service.
        * Deploy Prometheus and Grafana on k8s in the monitoring namespace.
        * Verify Node Exporter setup.
        * Verify monitoring stack deployment.
        * PV, PVC must be created using the local storage class
+       * Grafana Dashboards: Automatically import dashboards for Kubernetes, kube-state-metrics v2, and node-exporter.
    2. Redis Service:
        * Create an sdv namespace.
        * Deploy a single-pod Redis service with its Kubernetes service in the sdv namespace.

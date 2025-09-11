@@ -26,37 +26,10 @@ fi
 
 echo "--- Deploying Monitoring Stack ---"
 
-# 1. Install Prometheus Node Exporter on the VM
-echo "Installing Prometheus Node Exporter..."
-if ! id -u node_exporter > /dev/null 2>&1; then
-    sudo useradd --no-create-home --shell /bin/false node_exporter
-fi
-
-wget https://github.com/prometheus/node_exporter/releases/download/v1.8.1/node_exporter-1.8.1.linux-amd64.tar.gz
-tar xvf node_exporter-1.8.1.linux-amd64.tar.gz
-sudo cp node_exporter-1.8.1.linux-amd64/node_exporter /usr/local/bin
-sudo chown node_exporter:node_exporter /usr/local/bin/node_exporter
-rm -rf node_exporter-1.8.1.linux-amd64.tar.gz node_exporter-1.8.1.linux-amd64
-
-sudo tee /etc/systemd/system/node_exporter.service <<EOF
-[Unit]
-Description=Prometheus Node Exporter
-Wants=network-online.target
-After=network-online.target
-
-[Service]
-User=node_exporter
-Group=node_exporter
-Type=simple
-ExecStart=/usr/local/bin/node_exporter
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl daemon-reload
-sudo systemctl start node_exporter
-sudo systemctl enable node_exporter
+# 1. Deploy Node Exporter
+echo "Deploying Node Exporter..."
+kubectl apply -f kubernetes/monitoring/node-exporter-daemonset.yaml
+kubectl apply -f kubernetes/monitoring/node-exporter-service.yaml
 
 # 2. Get node name
 sudo mkdir -p /data/grafana-data
@@ -76,6 +49,7 @@ kubectl apply -f kubernetes/monitoring/prometheus-pvc.yaml
 kubectl apply -f kubernetes/monitoring/prometheus-configmap.yaml.tmp
 kubectl apply -f kubernetes/monitoring/prometheus-deployment.yaml
 kubectl apply -f kubernetes/monitoring/prometheus-service.yaml
+kubectl delete pod -l app=prometheus -n monitoring
 kubectl apply -f kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
 kubectl apply -f kubernetes/monitoring/grafana-pvc.yaml
 kubectl apply -f kubernetes/monitoring/grafana-deployment.yaml

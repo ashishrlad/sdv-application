@@ -25,12 +25,19 @@ spec:
           value: http://localhost:3000/grafana
         - name: GF_SERVER_SERVE_FROM_SUB_PATH
           value: "true"
+        - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
+          value: /var/lib/grafana/dashboards/15661_rev2.json
         ports:
         - containerPort: 3000
         volumeMounts:
         - name: storage
           mountPath: /var/lib/grafana
+        - name: grafana-dashboards
+          mountPath: /var/lib/grafana/dashboards
       volumes:
       - name: storage
         persistentVolumeClaim:
           claimName: grafana-pvc
+      - name: grafana-dashboards
+        configMap:
+          name: grafana-dashboards

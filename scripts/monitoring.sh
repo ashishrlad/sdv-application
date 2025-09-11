@@ -26,6 +26,8 @@ fi
 
 echo "--- Deploying Monitoring Stack ---"
 
+kubectl apply -f kubernetes/monitoring/namespace.yaml
+
 # 1. Deploy Node Exporter
 echo "Deploying Node Exporter..."
 kubectl apply -f kubernetes/monitoring/node-exporter-daemonset.yaml

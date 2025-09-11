@@ -1,10 +1,9 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: minio
   namespace: minio
 spec:
-  serviceName: minio
   replicas: 1
   selector:
     matchLabels:
@@ -20,31 +19,20 @@ spec:
         fsGroup: 1000
       containers:
       - name: minio
-        image: quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z
+        image: minio/minio:latest
         args:
         - server
-        - http://minio-{0}.minio.minio.svc.cluster.local/data
-        - --console-address
-        - ":9001"
+        - /data
         envFrom:
         - secretRef:
             name: minio-secret
         ports:
         - containerPort: 9000
-          name: api
         - containerPort: 9001
-          name: console
         volumeMounts:
         - name: storage
-          mountPath: /data
-  volumeClaimTemplates:
-  - metadata:
-      name: storage
-    spec:
-      accessModes:
-      - ReadWriteOnce
-      resources:
-        requests:
-          storage: 10Gi
-
-
+          mountPath: "/data"
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: minio-pvc

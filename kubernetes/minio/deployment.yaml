@@ -1,9 +1,10 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: minio
   namespace: minio
 spec:
+  serviceName: minio
   replicas: 1
   selector:
     matchLabels:
@@ -22,7 +23,7 @@ spec:
         image: quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z
         args:
         - server
-        - /data
+        - http://minio-{0}.minio.minio.svc.cluster.local/data
         - --console-address
         - ":9001"
         envFrom:
@@ -36,8 +37,14 @@ spec:
         volumeMounts:
         - name: storage
           mountPath: /data
-      volumes:
-      - name: storage
-        persistentVolumeClaim:
-          claimName: minio-pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: storage
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
+
 

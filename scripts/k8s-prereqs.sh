@@ -84,16 +84,39 @@ sudo sysctl --system
 
 # 6. Install kubeadm, kubelet, kubectl
 echo "Installing Kubernetes components..."
-if ! command -v kubelet &> /dev/null; then
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --k8s-version) K8S_VERSION="$2"; shift ;;
+        *) echo "Unknown parameter passed: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+if [ -z "$K8S_VERSION" ]; then
+    echo "Error: Missing --k8s-version argument."
+    exit 1
+fi
+
+K8S_MAJOR_VERSION=$(echo $K8S_VERSION | cut -d. -f1,2)
+
+if ! command -v kubelet &> /dev/null || ! kubelet --version | grep -q "$K8S_VERSION"; then
     sudo apt-get update
     sudo apt-get install -y apt-transport-https ca-certificates curl
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/Release.key" | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update
-    sudo apt-get install -y kubelet kubeadm kubectl
+
+    if ! apt-cache madison kubeadm | grep -q "$K8S_VERSION"; then
+        echo "Error: Kubernetes version $K8S_VERSION not found in the repository."
+        exit 1
+    fi
+
+    sudo apt-get install -y kubelet=$K8S_VERSION-00 kubeadm=$K8S_VERSION-00 kubectl=$K8S_VERSION-00
     sudo apt-mark hold kubelet kubeadm kubectl
 else
-    echo "Kubernetes components are already installed."
+    echo "Kubernetes components version $K8S_VERSION are already installed."
 fi
 
 

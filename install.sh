@@ -36,7 +36,7 @@ echo "Starting installation with Kube API IP: $KUBE_API_IP and Kubernetes Versio
 mkdir -p scripts
 
 echo "Phase 1: Core Framework and Environment Setup"
-./scripts/k8s-prereqs.sh
+./scripts/k8s-prereqs.sh --k8s-version $K8S_VERSION
 ./scripts/haproxy.sh
 
 echo "Phase 2: Kubernetes Cluster and Basic Services"

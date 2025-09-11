@@ -18,7 +18,7 @@ sudo fuser -k 6443/tcp || echo "No process found using port 6443."
 
 # Unhold and remove kubernetes packages
 echo "Removing Kubernetes packages..."
-(sudo apt-mark unhold kubeadm kubectl kubelet && sudo apt-get purge -y kubeadm kubectl kubelet) || echo "Kubernetes packages not found, skipping..."
+(sudo apt-mark unhold kubeadm kubectl kubelet && sudo apt-get purge -y kubeadm kubectl kubelet && sudo apt-get autoremove -y) || echo "Kubernetes packages not found, skipping..."
 
 
 # Remove directories
@@ -28,10 +28,15 @@ sudo rm -rf $HOME/.kube
 sudo rm -rf /var/lib/etcd
 sudo rm -rf /etc/containerd
 sudo rm -rf /etc/cni
+sudo rm -rf sdv-application
 
 # Flush iptables
 echo "Flushing iptables..."
 sudo iptables -F && sudo iptables -t nat -F && sudo iptables -t mangle -F && sudo iptables -X
+
+# Reload systemd
+echo "Reloading systemd..."
+sudo systemctl daemon-reload
 
 echo "Cleanup complete."
 echo "Note: /data/mysql-db-data/ and /data/minio-storage/ have not been removed."

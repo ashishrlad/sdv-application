@@ -52,6 +52,15 @@ rm kubernetes/cluster-level/pv/minio-pv.yaml.tmp
 # 6. Verify deployment
 echo "Verifying MinIO deployment..."
 sleep 10
+echo "--- MinIO Resources ---"
+kubectl get all -n minio
+echo "--- MinIO Deployment Description ---"
+kubectl describe deployment minio -n minio
+echo "--- MinIO PVC Description ---"
+kubectl describe pvc minio-pvc -n minio
+echo "--- MinIO PV Description ---"
+kubectl describe pv minio-pv
+
 kubectl wait --for=condition=ready pod -l app=minio -n minio --timeout=300s
 
 echo "--- MinIO Deployed ---"

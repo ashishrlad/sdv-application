@@ -19,7 +19,12 @@ spec:
         fsGroup: 1000
       containers:
       - name: minio
-        image: minio/minio:latest
+        image: quay.io/minio/minio:RELEASE.2024-10-13T13-34-11Z
+        command:
+         - /bin/bash
+         - -c
+        args: 
+         - minio server /data --console-address :9001
         args:
         - server
         - /data

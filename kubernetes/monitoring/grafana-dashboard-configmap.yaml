@@ -84,6 +84,7 @@ data:
       "gnetId": 15661,
       "graphTooltip": 0,
       "id": null,
+      "uid": "k8s-dashboard",
       "links": [
         {
           "icon": "bolt",

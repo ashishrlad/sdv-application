@@ -33,24 +33,9 @@ spec:
         - name: storage
           mountPath: /var/lib/grafana
         - name: grafana-dashboards
-          mountPath: /var/lib/grafana/dashboards/15661_rev2.json
-          subPath: 15661_rev2.json
-                env:
-        - name: GF_SERVER_ROOT_URL
-          value: http://localhost:3000/grafana
-        - name: GF_SERVER_SERVE_FROM_SUB_PATH
-          value: "true"
-        ports:
-        - containerPort: 3000
-        volumeMounts:
-        - name: storage
-          mountPath: /var/lib/grafana
-        - name: grafana-dashboards
           mountPath: /var/lib/grafana/dashboards
         - name: grafana-datasources
           mountPath: /etc/grafana/provisioning/datasources
-        - name: grafana-dashboard-provisioning
-          mountPath: /etc/grafana/provisioning/dashboards
         - name: grafana-dashboard-provisioning
           mountPath: /etc/grafana/provisioning/dashboards
       volumes:

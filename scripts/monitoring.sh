@@ -55,7 +55,7 @@ kubectl delete pod -l app=prometheus -n monitoring
 
 # Deploy kube-state-metrics
 echo "Deploying kube-state-metrics..."
-kubectl apply -f kubernetes/monitoring/kube-state-metrics/
+kubectl apply -k kubernetes/monitoring/kube-state-metrics/
 
 kubectl apply -f kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
 kubectl apply -f kubernetes/monitoring/grafana-pvc.yaml

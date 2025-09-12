@@ -52,6 +52,11 @@ kubectl apply -f kubernetes/monitoring/prometheus-configmap.yaml.tmp
 kubectl apply -f kubernetes/monitoring/prometheus-deployment.yaml
 kubectl apply -f kubernetes/monitoring/prometheus-service.yaml
 kubectl delete pod -l app=prometheus -n monitoring
+
+# Deploy kube-state-metrics
+echo "Deploying kube-state-metrics..."
+kubectl apply -f kubernetes/monitoring/kube-state-metrics/
+
 kubectl apply -f kubernetes/cluster-level/pv/grafana-pv.yaml.tmp
 kubectl apply -f kubernetes/monitoring/grafana-pvc.yaml
 kubectl apply -f kubernetes/monitoring/grafana-datasource-configmap.yaml

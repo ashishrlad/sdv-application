@@ -33,12 +33,18 @@ sudo kubeadm init --pod-network-cidr=10.195.0.0/16 --apiserver-advertise-address
 
 # 2. Configure kubeconfig for the current user and root
 echo "Configuring kubeconfig..."
+if [ -f "$HOME/.kube/config" ]; then
+    mv $HOME/.kube/config $HOME/.kube/config.backup
+fi
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo cp /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
+if [ -f "/root/.kube/config" ]; then
+    sudo mv /root/.kube/config /root/.kube/config.backup
+fi
 sudo mkdir -p /root/.kube
-sudo cp -i /etc/kubernetes/admin.conf /root/.kube/config
+sudo cp /etc/kubernetes/admin.conf /root/.kube/config
 
 # 3. Install Calico CNI
 echo "Installing Calico CNI..."

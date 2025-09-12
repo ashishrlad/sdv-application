@@ -9,18 +9,13 @@ data:
       scrape_interval: 15s
     scrape_configs:
       - job_name: 'prometheus'
+        metrics_path: /metrics
         static_configs:
           - targets: ['localhost:9090']
       - job_name: 'node-exporter'
         kubernetes_sd_configs:
         - role: endpoints
-          namespaces:
-            names:
-            - monitoring
         relabel_configs:
-        - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        - source_labels: [__meta_kubernetes_service_label_app]
           action: keep
-          regex: node-exporter;http
-        - source_labels: [__meta_kubernetes_pod_node_name]
-          action: replace
-          target_label: kubernetes_node
+          regex: node-exporter

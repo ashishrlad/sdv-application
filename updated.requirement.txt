@@ -41,6 +41,7 @@ I. Core Automation Framework:
        * Install Prometheus Node Exporter on the VM.
        * Deploy Node Exporter as a DaemonSet in the 'monitoring' namespace.
        * Configure Prometheus to scrape metrics from the Node Exporter service.
+       * Configure Prometheus to scrape metrics from the Node Exporter service.
        * Deploy Prometheus and Grafana on k8s in the monitoring namespace.
        * Verify Node Exporter setup.
        * Verify monitoring stack deployment.

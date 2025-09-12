@@ -29,7 +29,7 @@ echo "--- Setting up Kubernetes Cluster ---"
 
 # 1. Initialize the Kubernetes cluster using kubeadm
 echo "Initializing Kubernetes cluster..."
-sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address=$KUBE_API_IP --kubernetes-version=$K8S_VERSION
+sudo kubeadm init --pod-network-cidr=10.195.0.0/16 --apiserver-advertise-address=$KUBE_API_IP --kubernetes-version=$K8S_VERSION
 
 # 2. Configure kubeconfig for the current user and root
 echo "Configuring kubeconfig..."

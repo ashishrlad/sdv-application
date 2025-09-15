@@ -32,10 +32,10 @@ spec:
         - name: grafana-dashboard-provider
           mountPath: /etc/grafana/provisioning/dashboards
         env:
-        - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_UID
-          value: mF5EwopGz
+        - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
+          value: /var/lib/grafana/dashboards/15661_rev2.json
         - name: GF_SERVER_ROOT_URL
-          value: http://localhost:3000/grafana
+          value: http://grafana-service.monitoring.svc.cluster.local:3000/grafana
         - name: GF_SERVER_SERVE_FROM_SUB_PATH
           value: "true"
         - name: GF_ANALYTICS_CHECK_FOR_UPDATES

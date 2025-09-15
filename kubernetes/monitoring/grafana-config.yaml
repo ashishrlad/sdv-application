@@ -15,4 +15,4 @@ data:
     [auth]
     disable_login_form = false
     [dashboards]
-    default_home_dashboard_path = /var/lib/grafana/dashboards/15661_rev2.json
+    default_home_dashboard_uid = mF5EwopGz

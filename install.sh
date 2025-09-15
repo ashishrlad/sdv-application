@@ -41,9 +41,9 @@ echo "Phase 1: Core Framework and Environment Setup"
 
 echo "Phase 2: Kubernetes Cluster and Basic Services"
 ./scripts/k8s-cluster.sh --ip $KUBE_API_IP --k8s-version $K8S_VERSION
-  #mkdir -p $HOME/.kube
-  #sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  #sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ./scripts/local-storage.sh
 ./scripts/minio.sh --ip $KUBE_API_IP
 ./scripts/mysql.sh
@@ -59,11 +59,11 @@ final_summary() {
     echo "Namespaces:"
     kubectl get namespaces
     echo "Nodes:"
-    kubectl get nodes
+    kubectl get nodes -o wide
     echo "Pods:"
-    kubectl get pods --all-namespaces
+    kubectl get pods --all-namespaces -o wide
     echo "Services:"
-    kubectl get services --all-namespaces
+    kubectl get services --all-namespaces -o wide
     echo "---"
     echo "MinIO Console: http://<YOUR_NODE_IP>:30090"
     echo "Grafana: http://<YOUR_NODE_IP>:30092"
@@ -72,5 +72,7 @@ final_summary() {
     echo "--- "
     echo "Installation has completed successfully!"
 }
+
+final_summary
 
 echo "Installation complete!"

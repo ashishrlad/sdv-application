@@ -11,7 +11,7 @@ data:
       - job_name: 'prometheus'
         metrics_path: /prometheus/metrics
         static_configs:
-          - targets: ['prometheus-service.monitoring.svc.cluster.local:9090']
+          - targets: ['localhost:9090']
 
       - job_name: 'node_exporter'
         metrics_path: /metrics

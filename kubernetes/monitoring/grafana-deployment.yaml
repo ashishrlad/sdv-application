@@ -22,18 +22,19 @@ spec:
         image: grafana/grafana:11.0.0
         ports:
         - containerPort: 3000
-        volumeMounts:
-        - name: storage
-          mountPath: /var/lib/grafana
-        - name: grafana-dashboards
-          mountPath: /var/lib/grafana/dashboards
-        - name: grafana-datasources
-          mountPath: /etc/grafana/provisioning/datasources
-        - name: grafana-dashboard-provider
-          mountPath: /etc/grafana/provisioning/dashboards
-        - name: grafana-config
-          mountPath: /etc/grafana/grafana.ini
-          subPath: grafana.ini
+        env:
+        - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_UID
+          value: mF5EwopGz
+        - name: GF_SERVER_ROOT_URL
+          value: http://localhost:3000/grafana
+        - name: GF_SERVER_SERVE_FROM_SUB_PATH
+          value: "true"
+        - name: GF_ANALYTICS_CHECK_FOR_UPDATES
+          value: "true"
+        - name: GF_USERS_DEFAULT_THEME
+          value: light
+        - name: GF_AUTH_DISABLE_LOGIN_FORM
+          value: "false"
       volumes:
       - name: storage
         persistentVolumeClaim:
@@ -44,9 +45,6 @@ spec:
       - name: grafana-datasources
         configMap:
           name: grafana-datasources
-      - name: grafana-config
-        configMap:
-          name: grafana-config
       - name: grafana-dashboard-provider
         configMap:
           name: grafana-dashboard-provider

@@ -12,4 +12,3 @@ data:
       url: http://prometheus-service.monitoring.svc.cluster.local:9090/prometheus
       access: proxy
       isDefault: true
-      uid: DS_PROMETHEUS

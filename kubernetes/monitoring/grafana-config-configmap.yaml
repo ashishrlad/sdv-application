@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+  namespace: monitoring
+data:
+  grafana.ini: |-
+    [analytics]
+    check_for_updates = true
+
+    [users]
+    default_theme = light
+
+    [auth]
+    disable_login_form = false
+
+    [dashboards]
+    default_home_dashboard_path = /var/lib/grafana/dashboards/dashboard-15661.json

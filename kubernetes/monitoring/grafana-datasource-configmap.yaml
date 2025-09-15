@@ -1,14 +1,16 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: grafana-datasources
+  name: grafana-datasource
   namespace: monitoring
+  labels:
+    grafana_datasource: "1"
 data:
-  prometheus.yaml: |
+  prometheus-datasource.yaml: |-
     apiVersion: 1
     datasources:
     - name: Prometheus
       type: prometheus
-      url: http://prometheus-service.monitoring.svc.cluster.local:9090/prometheus
       access: proxy
+      url: http://prometheus-server.monitoring.svc.cluster.local
       isDefault: true

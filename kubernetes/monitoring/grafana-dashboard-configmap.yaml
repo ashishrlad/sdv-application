@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 data:
   15661_rev2.json: |
-  {
+    {
   "__inputs": [
     {
       "name": "DS__VICTORIAMETRICS-PROD-ALL",

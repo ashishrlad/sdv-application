@@ -20,13 +20,6 @@ spec:
       containers:
       - name: grafana
         image: grafana/grafana:11.0.0
-        env:
-        - name: GF_SERVER_ROOT_URL
-          value: http://localhost:3000/grafana
-        - name: GF_SERVER_SERVE_FROM_SUB_PATH
-          value: "true"
-        - name: GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH
-          value: /var/lib/grafana/dashboards/15661_rev2.json
         ports:
         - containerPort: 3000
         volumeMounts:
@@ -36,6 +29,9 @@ spec:
           mountPath: /var/lib/grafana/dashboards
         - name: grafana-datasources
           mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana-config
+          mountPath: /etc/grafana/grafana.ini
+          subPath: grafana.ini
       volumes:
       - name: storage
         persistentVolumeClaim:
@@ -46,3 +42,6 @@ spec:
       - name: grafana-datasources
         configMap:
           name: grafana-datasources
+      - name: grafana-config
+        configMap:
+          name: grafana-config

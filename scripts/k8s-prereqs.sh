@@ -22,6 +22,16 @@ fi
 if ! command -v docker &> /dev/null; then
     sudo apt-get update
     sudo apt-get install -y docker.io
+
+    # Configure Docker to use its own socket instead of containerd
+    sudo mkdir -p /etc/systemd/system/docker.service.d
+    sudo tee /etc/systemd/system/docker.service.d/override.conf <<EOF
+[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H fd:// -H unix:///var/run/docker.sock
+EOF
+    sudo systemctl daemon-reload
+    sudo systemctl restart docker
 else
     echo "docker is already installed."
 fi

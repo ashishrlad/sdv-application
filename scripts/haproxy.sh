@@ -55,23 +55,35 @@ defaults
 frontend http_front
    bind *:80
    bind *:443 ssl crt /etc/haproxy/certs/haproxy.pem
-   bind *:30090 ssl crt /etc/haproxy/certs/haproxy.pem
+   #bind *:30090 ssl crt /etc/haproxy/certs/haproxy.pem
    stats uri /haproxy?stats
 
    #acl is_minio dst_port 30090
-   acl path_minio path_beg /minio
+   #acl path_minio path_beg /minio
    acl path_grafana path_beg /grafana
    acl path_prometheus path_beg /prometheus
 
-   use_backend minio_back if path_minio
+   #use_backend minio_back if path_minio
    use_backend grafana_back if path_grafana
    use_backend prometheus_back if path_prometheus
    default_backend http_back
 
+
+frontend http_minio
+   bind *:4443 ssl crt /etc/haproxy/certs/haproxy.pem
+   mode http
+   default_backend minio-backend
+ 
+ackend minio-backend
+    mode http
+    balance roundrobin
+    server minio-server 127.0.0.1:30090 check
+
+
 backend http_back
    server web_app 127.0.0.1:30080 check
 
-backend minio_back
+#backend minio_back
    #server minio_server 127.0.0.1:9001 check
    server minio_server 127.0.0.1:30090 check
 

@@ -42,7 +42,17 @@ echo "Applying MinIO manifests..."
 kubectl apply -f kubernetes/minio/namespace.yaml
 
 # Create a secret for MinIO SSL certificates
-sudo kubectl create secret generic minio-certs --from-file=/etc/haproxy/certs/haproxy.pem -n minio --dry-run=client -o yaml | kubectl apply -f -
+# Extract certificate and key from haproxy.pem
+sudo openssl pkey -in /etc/haproxy/certs/haproxy.pem -out /tmp/private.key
+sudo openssl x509 -in /etc/haproxy/certs/haproxy.pem -out /tmp/public.crt
+
+sudo kubectl create secret generic minio-certs \
+    --from-file=public.crt=/tmp/public.crt \
+    --from-file=private.key=/tmp/private.key \
+    -n minio --dry-run=client -o yaml | kubectl apply -f -
+
+sudo rm /tmp/public.crt /tmp/private.key
+
 
 kubectl apply -f kubernetes/minio/secret.yaml
 kubectl apply -f kubernetes/cluster-level/pv/minio-pv.yaml.tmp

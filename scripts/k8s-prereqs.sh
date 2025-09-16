@@ -104,7 +104,7 @@ K8S_MAJOR_VERSION=$(echo $K8S_VERSION | cut -d. -f1,2)
 if ! command -v kubelet &> /dev/null || ! kubelet --version | grep -q "$K8S_VERSION"; then
     sudo apt-get update
     sudo apt-get install -y apt-transport-https ca-certificates curl
-    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/Release.key" | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/Release.key" | sudo gpg --dearmor | sudo tee /etc/apt/keyrings/kubernetes-apt-keyring.gpg > /dev/null
     echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v$K8S_MAJOR_VERSION/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
     sudo apt-get update
     sudo apt-get install -y kubelet kubeadm kubectl

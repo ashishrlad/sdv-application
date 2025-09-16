@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 set -e
 
 # Logging setup
-LOG_FILE="installation.log"
+LOG_FILE="install-$(date +%Y%m%d-%H%M%S).log"
 exec &> >(tee -a "$LOG_FILE")
 
 # Prompt for Kube API IP
@@ -28,9 +28,9 @@ echo "Phase 1: Core Framework and Environment Setup"
 
 echo "Phase 2: Kubernetes Cluster and Basic Services"
 ./scripts/k8s-cluster.sh --ip $KUBE_API_IP --k8s-version $K8S_VERSION
-  mkdir -p $HOME/.kube
-  sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-  sudo chown $USER:$USER $HOME/.kube/config
+  #mkdir -p $HOME/.kube
+  #sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+  #sudo chown $USER:$USER $HOME/.kube/config
 ./scripts/local-storage.sh
 ./scripts/minio.sh --ip $KUBE_API_IP
 ./scripts/mysql.sh

@@ -3,6 +3,10 @@
 # Exit on any error
 set -e
 
+# Logging setup
+LOG_FILE="cleanup-$(date +%Y%m%d-%H%M%S).log"
+exec &> >(tee -a "$LOG_FILE")
+
 echo "Starting cleanup..."
 
 # Stop and disable kubelet

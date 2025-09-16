@@ -27,24 +27,34 @@ fi
 
 echo "--- Setting up Kubernetes Cluster ---"
 
-# 1. Initialize the Kubernetes cluster using kubeadm
-echo "Initializing Kubernetes cluster..."
-sudo kubeadm init --pod-network-cidr=10.195.0.0/16 --apiserver-advertise-address=$KUBE_API_IP --kubernetes-version=$K8S_VERSION
+if [ -f /etc/kubernetes/admin.conf ]; then
+    echo "Kubernetes cluster already initialized. Skipping kubeadm init and kubeconfig setup."
+else
+    # 1. Initialize the Kubernetes cluster using kubeadm
+    echo "Initializing Kubernetes cluster..."
+    sudo kubeadm init --pod-network-cidr=10.195.0.0/16 --apiserver-advertise-address=$KUBE_API_IP --kubernetes-version=$K8S_VERSION
 
-# 2. Configure kubeconfig for the current user and root
-echo "Configuring kubeconfig..."
-mkdir -p $HOME/.kube
-sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    # 2. Configure kubeconfig for the current user and root
+    echo "Configuring kubeconfig..."
+    mkdir -p $HOME/.kube
+    sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-sudo mkdir -p /root/.kube
-sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
+    sudo mkdir -p /root/.kube
+    sudo cp -f /etc/kubernetes/admin.conf /root/.kube/config
+fi
 
-# 3. Install Calico CNI
+# 3. Install Calico CNI (This should be idempotent or handled carefully if re-run)
 echo "Installing Calico CNI..."
-kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+# Check if Calico is already installed before applying
+if ! kubectl get namespace calico &> /dev/null; then
+    kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/calico.yaml
+else
+    echo "Calico CNI already installed. Skipping."
+fi
 
-# 4. Remove the control-plane taint
+
+# 4. Remove the control-plane taint (This command is idempotent)
 echo "Removing control-plane taint..."
 kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 

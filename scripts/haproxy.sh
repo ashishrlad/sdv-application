@@ -74,7 +74,7 @@ frontend http_minio
    mode http
    default_backend minio-backend
  
-ackend minio-backend
+backend minio-backend
     mode http
     balance roundrobin
     server minio-server 127.0.0.1:30090 check

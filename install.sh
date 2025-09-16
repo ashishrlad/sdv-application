@@ -42,7 +42,7 @@ echo "Phase 1: Core Framework and Environment Setup"
 echo "Phase 2: Kubernetes Cluster and Basic Services"
 ./scripts/k8s-cluster.sh --ip $KUBE_API_IP --k8s-version $K8S_VERSION
   mkdir -p /home/ubuntu/.kube
-  sudo cp -i /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
+  sudo cp -f /etc/kubernetes/admin.conf /home/ubuntu/.kube/config
   sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
 ./scripts/local-storage.sh
 ./scripts/minio.sh --ip $KUBE_API_IP

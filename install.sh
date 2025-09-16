@@ -8,26 +8,13 @@ set -e
 LOG_FILE="installation.log"
 exec &> >(tee -a "$LOG_FILE")
 
-# Function to display usage
-usage() {
-    echo "Usage: $0 --ip <kube-api-ip> --k8s-version <kubernetes-version>"
-    exit 1
-}
+# Prompt for Kube API IP
+read -p "Enter the Kube API IP address: " KUBE_API_IP
 
-# Parse arguments
-while [[ "$#" -gt 0 ]]; do
-    case $1 in
-        --ip) KUBE_API_IP="$2"; shift ;;
-        --k8s-version) K8S_VERSION="$2"; shift ;;
-        *) echo "Unknown parameter passed: $1"; usage ;;
-    esac
-    shift
-done
-
-# Check if parameters are set
-if [ -z "$KUBE_API_IP" ] || [ -z "$K8S_VERSION" ]; then
-    echo "Error: Missing required arguments."
-    usage
+# Prompt for Kubernetes Version with default
+read -p "Enter the Kubernetes version (e.g., 1.32.0, default: 1.32.0): " K8S_VERSION
+if [ -z "$K8S_VERSION" ]; then
+    K8S_VERSION="1.32.0"
 fi
 
 echo "Starting installation with Kube API IP: $KUBE_API_IP and Kubernetes Version: $K8S_VERSION"

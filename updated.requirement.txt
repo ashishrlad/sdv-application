@@ -52,7 +52,7 @@ I. Core Automation Framework:
        * Deploy a single-pod Redis service with its Kubernetes service in the sdv namespace.
        * Verify Redis setup.
    3. MySQL Service:
-       * Create /mnt/mysql-db-data/ directory on the VM.
+       * Create /data/mysql-db-data/ directory on the VM.
        * Create a local storage class named sdv-local-storage.
        * Deploy MySQL on k8s using PV and PVC with the sdv-local-storage class.
        * Verify MySQL setup, create sdv_data database, create user sdvuser with password abcd1234, grant all privileges, and flush privileges.
@@ -65,9 +65,10 @@ I. Core Automation Framework:
        * Deploy an Nginx/frontend app using nginx:latest image with a NodePort service in the sdv namespace.
        * Verify SDV Nginx/frontend app deployment.
    6. MinIO Service:
-       * Create /mnt/minio-storage/ directory.
+       * Create /data/minio-storage/ directory.
        * Create a minio namespace.
        * Deploy MinIO on k8s with a local volume and its Kubernetes service.
+       * MinIO should run on port 30090 with SSL.
        * Specific handling for PV/PVC: Ensure nodeAffinity is correctly templated and handled for local PVs, with graceful failure and user
          instructions if an immutable PV is encountered.
    7. General Verification: All pod status checks should be robust, including checking status.containerStatuses[0].ready.
@@ -75,7 +76,7 @@ I. Core Automation Framework:
   IV. Cleanup Script Enhancements:
    1. Kubernetes Package Removal: Unhold and remove kubeadm, kubectl, kubelet packages, allowing changes to held packages.
    2. Directory Removal: Remove /etc/kubernetes, $HOME/.kube, /var/lib/etcd, /etc/containerd, and /etc/cni directories.
-   3. Persistent Data Exclusion: Do NOT remove /mnt/mysql-db-data/ and /mnt/minio-storage/ directories.
+   3. Persistent Data Exclusion: Do NOT remove /data/mysql-db-data/ and /data/minio-storage/ directories.
    4. Iptables Flush: Flush iptables rules (iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X).
 
   This comprehensive set of requirements has guided the development of bash or shell scripts and helper scripts.

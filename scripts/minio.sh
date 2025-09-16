@@ -39,6 +39,9 @@ sed "s/<NODE_NAME>/$NODE_NAME/g" kubernetes/cluster-level/pv/minio-pv.yaml > kub
 
 # 4. Apply manifests
 echo "Applying MinIO manifests..."
+# Create a secret for MinIO SSL certificates
+sudo kubectl create secret generic minio-certs --from-file=/etc/haproxy/certs/haproxy.pem -n minio --dry-run=client -o yaml | kubectl apply -f -
+
 kubectl apply -f kubernetes/minio/namespace.yaml
 kubectl apply -f kubernetes/minio/secret.yaml
 kubectl apply -f kubernetes/cluster-level/pv/minio-pv.yaml.tmp
